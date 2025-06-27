@@ -1,6 +1,6 @@
 {
   "name": "nodefs-lite",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Utilitas File System Node.js",
   "exports": {
     "require": "./dist/cjs/index.js",
