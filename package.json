@@ -11,7 +11,9 @@
   ],
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "format": "prettier -w . && impsort && prettier -w .",
+    "build": "besmin lib dist esm cjs",
+    "dev": "pnpm format && pnpm build"
   },
   "keywords": [
     "nodefs-lite",

@@ -166,7 +166,7 @@ Return: `Promise<void>`
 Menulis object ke file JSON.
 
 ```js
-writeJSON('data.json', { name: 'Salman', Country: 'Indonesia' });
+writeJSON('data.json', { name: 'Salman', country: 'Indonesia' });
 ```
 
 Parameter:
