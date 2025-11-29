@@ -195,7 +195,7 @@ fsx.fileExt('__a.txt'); // ".txt"
 Nama file dari path.
 
 ```js
-fsx.fileName('/__app/__data/__a.txt'); // "__a.txt"
+fsx.fileName('__app/__data/__a.txt'); // "__a.txt"
 ```
 
 ### Stream Helpers
