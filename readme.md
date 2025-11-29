@@ -145,7 +145,7 @@ fs.readJSON('__config.json');
 Menyimpan objek ke file JSON dengan format rapi (2 spaces).
 
 ```js
-await fs.writeJSON('__config.json', { name: 'App' });
+fs.writeJSON('__config.json', { name: 'App' });
 ```
 
 ### Info Utilities
