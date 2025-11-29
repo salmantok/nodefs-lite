@@ -195,7 +195,7 @@ fs.fileExt('__a.txt'); // ".txt"
 Nama file dari path.
 
 ```js
-fs.fileName('/__app/__data/__a.txt'); // "__a.txt"
+fs.fileName('__app/__data/__a.txt'); // "__a.txt"
 ```
 
 ### Stream Helpers
