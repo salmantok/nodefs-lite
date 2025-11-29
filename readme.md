@@ -15,177 +15,203 @@ npm install nodefs-lite
 ```js
 import fs from 'nodefs-lite';
 
-await fs.ensureFile('folder/file.txt');
-await fs.write('folder/file.txt', 'Hello, world!');
-console.log(await fs.read('folder/file.txt'));
-```
-
-atau
-
-```js
-import { fs } from 'nodefs-lite';
-
-await fs.ensureFile('folder/file.txt');
-await fs.write('folder/file.txt', 'Hello, world!');
-console.log(await fs.read('folder/file.txt'));
-```
-
-atau
-
-```js
-import { ensureFile, write, read } from 'nodefs-lite';
-
-await ensureFile('folder/file.txt');
-await write('folder/file.txt', 'Hello, world!');
-console.log(await read('folder/file.txt'));
+fs.writeFile('__data.txt', 'Hello World!');
 ```
 
 ## API
 
-### `write(path, content)`
+### Basic Helpers
 
-Menulis teks ke file (overwrite jika sudah ada).
+#### `exists(path): Promise<boolean>`
 
-```js
-write('file.txt', 'Hello, world!');
-```
-
-Parameter:
-
-- `path`: `string`
-- `content`: `string`
-
-Return: `Promise<void>`
-
-### `read(path)`
-
-Membaca isi file teks sebagai string.
+Cek apakah file/direktori ada.
 
 ```js
-console.log(read('file.txt'));
+fs.exists('__file.txt'); // true/false
 ```
 
-Parameter:
+#### `ensureDir(dir): Promise<void>`
 
-- `path`: `string`
-
-Return: `Promise<string>`
-
-### `copy(src, dest)`
-
-Menyalin file atau folder (rekursif).
+Pastikan direktori ada. Jika belum ada akan dibuat.
 
 ```js
-copy('file.txt', 'copied.txt');
-copy('folder', 'copied');
+fsx.ensureDir('__logs');
 ```
 
-Parameter:
+#### `ensureFile(file): Promise<void>`
 
-- `src`: `string`
-- `dest`: `string`
-
-Return: `Promise<void>`
-
-### `move(src, dest)`
-
-Memindahkan file atau folder (alias `rename`).
+Pastikan file ada. Jika belum ada, direktori dibuat dan file dikosongkan.
 
 ```js
-move('file.txt', 'renamed.txt');
-move('folder', 'renamed');
+fs.ensureFile('__data/__config.json');
 ```
 
-Parameter:
+#### `ensureEmptyDir(dir): Promise<void>`
 
-- `src`: `string`
-- `dest`: `string`
-
-Return: `Promise<void>`
-
-### `remove(path)`
-
-Menghapus file atau folder (rekursif).
+Menghapus direktori secara rekursif lalu membuat ulang direktori kosong.
 
 ```js
-remove('file.txt');
-remove('folder');
+fs.ensureEmptyDir('__dist');
 ```
 
-Parameter:
+### File Operations
 
-- `path`: `string`
+#### `readFile(path, encoding = 'utf8'): Promise<string | Buffer>`
 
-Return: `Promise<void>`
-
-### `mkdir(path)`
-
-Membuat folder (rekursif).
+Membaca isi file.
 
 ```js
-mkdir('a/b/c');
+fs.readFile('__hello.txt');
 ```
 
-Parameter:
+#### `writeFile(path, data, encoding = 'utf8'): Promise<void>`
 
-- `path`: `string`
-
-Return: `Promise<void>`
-
-### `exists(path)`
-
-Cek apakah file/folder ada.
+Menulis file dan otomatis membuat direktori jika belum ada.
 
 ```js
-exists('file.txt');
-exists('folder');
+fs.writeFile('__output/__message.txt', 'Hi!');
 ```
 
-Parameter:
+#### `appendFile(path, data, encoding = 'utf8'): Promise<void>`
 
-- `path`: `string`
-
-Return: `Promise<boolean>`
-
-### `ensureFile(path)`
-
-Menjamin file ada. Jika belum ada, akan dibuat (termasuk folder-nya).
+Menambahkan data ke akhir file.
 
 ```js
-ensureFile('folder/file.txt');
+fs.appendFile('__log.txt', '[INFO] Started\n');
 ```
 
-Parameter:
+#### `remove(path): Promise<void>`
 
-- `path`: `string`
-
-Return: `Promise<void>`
-
-### `writeJSON(path, data)`
-
-Menulis object ke file JSON.
+Menghapus file/direktori (recursive & force).
 
 ```js
-writeJSON('data.json', { name: 'Salman', country: 'Indonesia' });
+fs.remove('__dist');
 ```
 
-Parameter:
+#### `rename(oldPath, newPath): Promise<void>`
 
-- `path`: `string`
-- `data`: `Object`
-
-Return: `Promise<void>`
-
-### `readJSON(path)`
-
-Membaca file JSON dan mengembalikan object.
+Rename atau memindahkan file (auto-create folder tujuan).
 
 ```js
-console.log(readJSON('data.json'));
+fs.rename('__a.txt', '__backup/__a.txt');
 ```
 
-Parameter:
+#### `move(src, dest): Promise<void>`
 
-- `path`: `string`
+Alias rename untuk konsistensi.
 
-Return: `Promise<Object>`
+```js
+fs.move('__temp.zip', '__backup/__temp.zip');
+```
+
+#### `copy(src, dest): Promise<void>`
+
+Menyalin file ke lokasi baru.
+
+```js
+fs.copy('__logo.png', '__public/__logo.png');
+```
+
+### Directory Helpers
+
+#### `readDir(dir): Promise<string[]>`
+
+Membaca isi direktori.
+
+```js
+fs.readDir('__src');
+```
+
+#### `emptyDir(dir): Promise<void>`
+
+Mengosongkan isi direktori tetapi tidak menghapus direktori.
+
+```js
+fs.emptyDir('__cache');
+```
+
+### JSON Helpers
+
+#### `readJSON(path): Promise<any>`
+
+Membaca JSON dan otomatis parse.
+
+```js
+fs.readJSON('__config.json');
+```
+
+#### `writeJSON(path, obj): Promise<void>`
+
+Menyimpan objek ke file JSON dengan format rapi (2 spaces).
+
+```js
+await fsx.writeJSON('__config.json', { name: 'App' });
+```
+
+### Info Utilities
+
+#### `stat(path): Promise<Stats>`
+
+Mendapatkan informasi file.
+
+```js
+fs.stat('__data.txt');
+```
+
+#### `isFile(path): Promise<boolean>`
+
+Cek apakah path adalah file.
+
+```js
+fs.isFile('__data.txt');
+```
+
+#### `isDir(path): Promise<boolean>`
+
+Cek apakah path adalah folder.
+
+```js
+fs.isDir('__data');
+```
+
+#### `size(path): Promise<number>`
+
+Ukuran file dalam bytes.
+
+```js
+fs.size('__video.mp4');
+```
+
+#### `fileExt(path): string`
+
+Ekstensi file.
+
+```js
+fsx.fileExt('__a.txt'); // ".txt"
+```
+
+#### `fileName(path): string`
+
+Nama file dari path.
+
+```js
+fsx.fileName('/__app/__data/__a.txt'); // "__a.txt"
+```
+
+### Stream Helpers
+
+#### `createReadStream(path): ReadStream`
+
+Membuat stream pembaca file.
+
+```js
+fs.createReadStream('__bigfile.zip');
+```
+
+#### `createWriteStream(path): WriteStream`
+
+Membuat stream penulis file.
+
+```js
+fs.createWriteStream('__output.log');
+```
