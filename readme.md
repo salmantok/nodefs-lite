@@ -35,7 +35,7 @@ fs.exists('__file.txt'); // true/false
 Pastikan direktori ada. Jika belum ada akan dibuat.
 
 ```js
-fsx.ensureDir('__logs');
+fs.ensureDir('__logs');
 ```
 
 #### `ensureFile(file): Promise<void>`
@@ -145,7 +145,7 @@ fs.readJSON('__config.json');
 Menyimpan objek ke file JSON dengan format rapi (2 spaces).
 
 ```js
-await fsx.writeJSON('__config.json', { name: 'App' });
+await fs.writeJSON('__config.json', { name: 'App' });
 ```
 
 ### Info Utilities
@@ -187,7 +187,7 @@ fs.size('__video.mp4');
 Ekstensi file.
 
 ```js
-fsx.fileExt('__a.txt'); // ".txt"
+fs.fileExt('__a.txt'); // ".txt"
 ```
 
 #### `fileName(path): string`
@@ -195,7 +195,7 @@ fsx.fileExt('__a.txt'); // ".txt"
 Nama file dari path.
 
 ```js
-fsx.fileName('__app/__data/__a.txt'); // "__a.txt"
+fs.fileName('/__app/__data/__a.txt'); // "__a.txt"
 ```
 
 ### Stream Helpers
