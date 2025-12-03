@@ -257,7 +257,6 @@ console.log(obj.name);
 ```js
 await fs.writeJson('config.json', {
     name: 'nodefs-lite',
-    version: '0.0.9',
 });
 ```
 
