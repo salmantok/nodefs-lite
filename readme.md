@@ -15,203 +15,271 @@ npm install nodefs-lite
 ```js
 import fs from 'nodefs-lite';
 
-fs.writeFile('__data.txt', 'Hello World!');
+fs.writeFile('data.txt', 'Hello World!');
 ```
 
-## API
+# 1) **ALL FS METHODS** (bawaan Node.js)
 
-### Basic Helpers
-
-#### `exists(path): Promise<boolean>`
-
-Cek apakah file/direktori ada.
+## `access(path)`
 
 ```js
-fs.exists('__file.txt'); // true/false
+await fs.access('data.txt');
 ```
 
-#### `ensureDir(dir): Promise<void>`
-
-Pastikan direktori ada. Jika belum ada akan dibuat.
+## `copyFile(src, dest)`
 
 ```js
-fs.ensureDir('__logs');
+await fs.copyFile('a.txt', 'b.txt');
 ```
 
-#### `ensureFile(file): Promise<void>`
-
-Pastikan file ada. Jika belum ada, direktori dibuat dan file dikosongkan.
+## `cp(src, dest, options)`
 
 ```js
-fs.ensureFile('__data/__config.json');
+await fs.cp('src', 'dist', { recursive: true });
 ```
 
-#### `ensureEmptyDir(dir): Promise<void>`
-
-Menghapus direktori secara rekursif lalu membuat ulang direktori kosong.
+## `open(path, mode)`
 
 ```js
-fs.ensureEmptyDir('__dist');
+const f = await fs.open('log.txt', 'a');
+await f.write('Hello\n');
+await f.close();
 ```
 
-### File Operations
-
-#### `readFile(path, encoding = 'utf8'): Promise<string | Buffer>`
-
-Membaca isi file.
+## `opendir(path)`
 
 ```js
-fs.readFile('__hello.txt');
+const dir = await fs.opendir('./src');
+for await (const entry of dir) {
+    console.log(entry.name);
+}
 ```
 
-#### `writeFile(path, data, encoding = 'utf8'): Promise<void>`
-
-Menulis file dan otomatis membuat direktori jika belum ada.
+## `rename(oldPath, newPath)`
 
 ```js
-fs.writeFile('__output/__message.txt', 'Hi!');
+await fs.rename('old.txt', 'new.txt');
 ```
 
-#### `appendFile(path, data, encoding = 'utf8'): Promise<void>`
-
-Menambahkan data ke akhir file.
+## `truncate(path)`
 
 ```js
-fs.appendFile('__log.txt', '[INFO] Started\n');
+await fs.truncate('data.txt');
 ```
 
-#### `remove(path): Promise<void>`
-
-Menghapus file/direktori (recursive & force).
+## `rm(path, options)`
 
 ```js
-fs.remove('__dist');
+await fs.rm('temp', { recursive: true, force: true });
 ```
 
-#### `rename(oldPath, newPath): Promise<void>`
-
-Rename atau memindahkan file (auto-create folder tujuan).
+## `rmdir(path)`
 
 ```js
-fs.rename('__a.txt', '__backup/__a.txt');
+await fs.rmdir('empty-dir');
 ```
 
-#### `move(src, dest): Promise<void>`
-
-Alias rename untuk konsistensi.
+## `mkdir(path)`
 
 ```js
-fs.move('__temp.zip', '__backup/__temp.zip');
+await fs.mkdir('new-folder');
 ```
 
-#### `copy(src, dest): Promise<void>`
-
-Menyalin file ke lokasi baru.
+## `readdir(path)`
 
 ```js
-fs.copy('__logo.png', '__public/__logo.png');
+const files = await fs.readdir('./');
+console.log(files);
 ```
 
-### Directory Helpers
-
-#### `readDir(dir): Promise<string[]>`
-
-Membaca isi direktori.
+## `readlink(path)`
 
 ```js
-fs.readDir('__src');
+console.log(await fs.readlink('symlink.lnk'));
 ```
 
-#### `emptyDir(dir): Promise<void>`
-
-Mengosongkan isi direktori tetapi tidak menghapus direktori.
+## `symlink(target, path)`
 
 ```js
-fs.emptyDir('__cache');
+await fs.symlink('real-file.txt', 'alias.txt');
 ```
 
-### JSON Helpers
+## `lstat(path)`
 
-#### `readJSON(path): Promise<any>`
-
-Membaca JSON dan otomatis parse.
+## `stat(path)`
 
 ```js
-fs.readJSON('__config.json');
+const info = await fs.stat('a.txt');
+console.log(info.isFile(), info.size);
 ```
 
-#### `writeJSON(path, obj): Promise<void>`
-
-Menyimpan objek ke file JSON dengan format rapi (2 spaces).
+## `statfs(path)`
 
 ```js
-fs.writeJSON('__config.json', { name: 'App' });
+console.log(await fs.statfs('/'));
 ```
 
-### Info Utilities
-
-#### `stat(path): Promise<Stats>`
-
-Mendapatkan informasi file.
+## `link(existing, newPath)`
 
 ```js
-fs.stat('__data.txt');
+await fs.link('a.txt', 'a-hardlink.txt');
 ```
 
-#### `isFile(path): Promise<boolean>`
-
-Cek apakah path adalah file.
+## `unlink(path)`
 
 ```js
-fs.isFile('__data.txt');
+await fs.unlink('temp.txt');
 ```
 
-#### `isDir(path): Promise<boolean>`
-
-Cek apakah path adalah folder.
+## `chmod(path, mode)`
 
 ```js
-fs.isDir('__data');
+await fs.chmod('script.sh', 0o755);
 ```
 
-#### `size(path): Promise<number>`
-
-Ukuran file dalam bytes.
+## `chown(path, uid, gid)`
 
 ```js
-fs.size('__video.mp4');
+await fs.chown('file.txt', 1000, 1000);
 ```
 
-#### `fileExt(path): string`
-
-Ekstensi file.
+## `utimes(path, atime, mtime)`
 
 ```js
-fs.fileExt('__a.txt'); // ".txt"
+await fs.utimes('file.txt', new Date(), new Date());
 ```
 
-#### `fileName(path): string`
-
-Nama file dari path.
+## `lutimes(path)`
 
 ```js
-fs.fileName('__app/__data/__a.txt'); // "__a.txt"
+await fs.lutimes('file.txt', new Date(), new Date());
 ```
 
-### Stream Helpers
-
-#### `createReadStream(path): ReadStream`
-
-Membuat stream pembaca file.
+## `realpath(path)`
 
 ```js
-fs.createReadStream('__bigfile.zip');
+console.log(await fs.realpath('./'));
 ```
 
-#### `createWriteStream(path): WriteStream`
-
-Membuat stream penulis file.
+## `mkdtemp(prefix)`
 
 ```js
-fs.createWriteStream('__output.log');
+console.log(await fs.mkdtemp('tmp-'));
+```
+
+## `writeFile(path, data)`
+
+```js
+await fs.writeFile('a.txt', 'Hello world');
+```
+
+## `appendFile(path, data)`
+
+```js
+await fs.appendFile('a.txt', '\nAppend');
+```
+
+## `readFile(path)`
+
+```js
+console.log(await fs.readFile('a.txt', 'utf8'));
+```
+
+## `watch(path)`
+
+```js
+for await (const event of fs.watch('./')) {
+    console.log(event);
+}
+```
+
+## Streams (createReadStream, createWriteStream)
+
+```js
+fs.createReadStream('a.txt').pipe(fs.createWriteStream('b.txt'));
+```
+
+# 2) **HELPER METHODS** (buatan sendiri – modern & simple)
+
+## `exists(path)`
+
+```js
+if (await fs.exists('config.json')) {
+    console.log('Ada!');
+}
+```
+
+## `isFile(path)`
+
+```js
+console.log(await fs.isFile('a.txt')); // true/false
+```
+
+## `isDir(path)`
+
+```js
+console.log(await fs.isDir('src')); // true/false
+```
+
+## `ensureFile(path)`
+
+```js
+await fs.ensureFile('logs/app.log');
+```
+
+## `ensureDir(path)`
+
+```js
+await fs.ensureDir('dist/images/icons');
+```
+
+## `ensureEmptyDir(path)`
+
+```js
+await fs.ensureEmptyDir('dist');
+```
+
+## `emptyDir(path)`
+
+```js
+await fs.emptyDir('cache');
+```
+
+## `readJson(path)`
+
+```js
+const obj = await fs.readJson('config.json');
+console.log(obj.name);
+```
+
+## `writeJson(path, data)`
+
+```js
+await fs.writeJson('config.json', {
+    name: 'nodefs-lite',
+    version: '0.0.8',
+});
+```
+
+# 3) **FULL COMBINED EXAMPLE**
+
+```js
+import fs from 'nodefs-lite';
+
+await fs.ensureDir('data');
+
+await fs.writeJson('data/info.json', {
+    created: Date.now(),
+    app: 'nodefs-lite',
+});
+
+const info = await fs.readJson('data/info.json');
+
+console.log('Isi JSON:', info);
+
+await fs.appendFile('data/log.txt', 'Log baru...\n');
+
+console.log('Apakah data/log.txt ada?', await fs.exists('data/log.txt'));
+
+console.log('Isi folder data:', await fs.readdir('data'));
 ```
