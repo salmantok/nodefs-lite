@@ -15,7 +15,7 @@ npm install nodefs-lite
 ```js
 import fs from 'nodefs-lite';
 
-fs.writeFile('data.txt', 'Hello World!');
+await fs.writeFile('data.txt', 'Hello World!');
 ```
 
 # 1) **ALL FS METHODS** (bawaan Node.js)
@@ -257,7 +257,7 @@ console.log(obj.name);
 ```js
 await fs.writeJson('config.json', {
     name: 'nodefs-lite',
-    version: '0.0.8',
+    version: '0.0.9',
 });
 ```
 
