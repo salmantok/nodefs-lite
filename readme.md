@@ -3,8 +3,11 @@
 > `nodefs-lite` utilitas filesystem yang menyediakan API stabil berbasis `fs` dan `fs/promises` tanpa modifikasi, namun dengan tambahan helper modern untuk memudahkan banyak tugas umum.
 
 📦 **Ringan** — hanya membungkus fungsi `fs` asli
+
 ⚡ **Cepat** — tanpa overhead tambahan
+
 🔧 **Modular** — dapat di‐tree-shake
+
 👌 **Mudah digunakan** — API seragam dan modern
 
 ## Instalasi
