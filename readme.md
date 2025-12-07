@@ -1,8 +1,11 @@
 # nodefs-lite
 
-> Utilitas File System Node.js
+> `nodefs-lite` utilitas filesystem yang menyediakan API stabil berbasis `fs` dan `fs/promises` tanpa modifikasi, namun dengan tambahan helper modern untuk memudahkan banyak tugas umum.
 
-_`nodefs-lite` adalah modul utilitas file system yang memberikan API ringkas untuk operasi dasar file dan folder._
+📦 **Ringan** — hanya membungkus fungsi `fs` asli
+⚡ **Cepat** — tanpa overhead tambahan
+🔧 **Modular** — dapat di‐tree-shake
+👌 **Mudah digunakan** — API seragam dan modern
 
 ## Instalasi
 
@@ -10,275 +13,379 @@ _`nodefs-lite` adalah modul utilitas file system yang memberikan API ringkas unt
 npm install nodefs-lite
 ```
 
-## Penggunaan
+## Penggunaan Dasar
 
 ```js
 import fs from 'nodefs-lite';
 
-await fs.writeFile('data.txt', 'Hello World!');
+await fs.writeFile('hello.txt', 'Hello World!');
+console.log('[readFileSync] isi file:', fs.readFileSync('hello.txt', 'utf8'));
 ```
 
-# 1) **ALL FS METHODS** (bawaan Node.js)
+## API
 
-## `access(path)`
+### `accessSync(path)` / `access(path)`
 
 ```js
-await fs.access('data.txt');
+console.log('[accessSync] cek file.txt');
+fs.accessSync('file.txt');
 ```
 
-## `copyFile(src, dest)`
-
 ```js
-await fs.copyFile('a.txt', 'b.txt');
+console.log('[access] cek file.txt');
+await fs.access('file.txt');
 ```
 
-## `cp(src, dest, options)`
+### `appendFileSync(path, data)` / `appendFile(path, data)`
 
 ```js
-await fs.cp('src', 'dist', { recursive: true });
+console.log('[appendFileSync] tambah teks ke file.txt');
+fs.appendFileSync('file.txt', 'Hello\n');
 ```
 
-## `open(path, mode)`
-
 ```js
-const f = await fs.open('log.txt', 'a');
-await f.write('Hello\n');
-await f.close();
+console.log('[appendFile] tambah teks ke file.txt');
+await fs.appendFile('file.txt', 'Hello\n');
 ```
 
-## `opendir(path)`
+### `chmodSync(path, mode)` / `chmod(path, mode)`
 
 ```js
-const dir = await fs.opendir('./src');
-for await (const entry of dir) {
-    console.log(entry.name);
-}
+console.log('[chmodSync] ubah izin script.sh menjadi 755');
+fs.chmodSync('script.sh', 0o755);
 ```
 
-## `rename(oldPath, newPath)`
-
 ```js
-await fs.rename('old.txt', 'new.txt');
-```
-
-## `truncate(path)`
-
-```js
-await fs.truncate('data.txt');
-```
-
-## `rm(path, options)`
-
-```js
-await fs.rm('temp', { recursive: true, force: true });
-```
-
-## `rmdir(path)`
-
-```js
-await fs.rmdir('empty-dir');
-```
-
-## `mkdir(path)`
-
-```js
-await fs.mkdir('new-folder');
-```
-
-## `readdir(path)`
-
-```js
-const files = await fs.readdir('./');
-console.log(files);
-```
-
-## `readlink(path)`
-
-```js
-console.log(await fs.readlink('symlink.lnk'));
-```
-
-## `symlink(target, path)`
-
-```js
-await fs.symlink('real-file.txt', 'alias.txt');
-```
-
-## `lstat(path)`
-
-## `stat(path)`
-
-```js
-const info = await fs.stat('a.txt');
-console.log(info.isFile(), info.size);
-```
-
-## `statfs(path)`
-
-```js
-console.log(await fs.statfs('/'));
-```
-
-## `link(existing, newPath)`
-
-```js
-await fs.link('a.txt', 'a-hardlink.txt');
-```
-
-## `unlink(path)`
-
-```js
-await fs.unlink('temp.txt');
-```
-
-## `chmod(path, mode)`
-
-```js
+console.log('[chmod] ubah izin script.sh menjadi 755');
 await fs.chmod('script.sh', 0o755);
 ```
 
-## `chown(path, uid, gid)`
+### `chownSync(path, uid, gid)` / `chown(path, uid, gid)`
 
 ```js
+console.log('[chownSync] ubah owner file.txt');
+fs.chownSync('file.txt', 1000, 1000);
+```
+
+```js
+console.log('[chown] ubah owner file.txt');
 await fs.chown('file.txt', 1000, 1000);
 ```
 
-## `utimes(path, atime, mtime)`
+### `cpSync(src, dest)` / `cp(src, dest)`
 
 ```js
+console.log('[cpSync] salin a.txt -> backup/a.txt');
+fs.cpSync('a.txt', 'backup/a.txt');
+```
+
+```js
+console.log('[cp] salin a.txt -> backup/a.txt');
+await fs.cp('a.txt', 'backup/a.txt');
+```
+
+### `existsSync(path)` / `exists(path)`
+
+```js
+console.log('[existsSync] cek config.json:', fs.existsSync('config.json'));
+```
+
+```js
+console.log('[exists] cek config.json:', await fs.exists('config.json'));
+```
+
+### `lstatSync(path)` / `lstat(path)`
+
+```js
+const info = fs.lstatSync('file.txt');
+console.log('[lstatSync] info:', info.isFileSync());
+```
+
+```js
+const info = await fs.lstat('file.txt');
+console.log('[lstat] info:', info.isFile());
+```
+
+### `mkdirSync(path, { recursive })` / `mkdir(path, { recursive })`
+
+```js
+console.log('[mkdirSync] buat folder a/b/c');
+fs.mkdirSync('a/b/c', { recursive: true });
+```
+
+```js
+console.log('[mkdir] buat folder a/b/c');
+await fs.mkdir('a/b/c', { recursive: true });
+```
+
+### `mkdtempSync(prefix)` / `mkdtemp(prefix)`
+
+```js
+console.log('[mkdtempSync] buat folder tmp');
+fs.mkdtempSync('tmp-');
+```
+
+```js
+console.log('[mkdtemp] buat folder tmp');
+await fs.mkdtemp('tmp-');
+```
+
+### `readdirSync(dir)` / `readdir(dir)`
+
+```js
+console.log('[readdirSync] list folder:', fs.readdirSync('./'));
+```
+
+```js
+console.log('[readdir] list folder:', await fs.readdir('./'));
+```
+
+### `readFileSync(path, encoding)` / `readFile(path, encoding)`
+
+```js
+console.log('[readFileSync] isi:', fs.readFileSync('file.txt', 'utf8'));
+```
+
+```js
+console.log('[readFile] isi:', await fs.readFile('file.txt', 'utf8'));
+```
+
+### `readlinkSync(path)` / `readlink(path)`
+
+```js
+console.log('[readlinkSync] ->', fs.readlinkSync('symlink'));
+```
+
+```js
+console.log('[readlink] ->', await fs.readlink('symlink'));
+```
+
+### `realpathSync(path)` / `realpath(path)`
+
+```js
+console.log('[realpathSync] ->', fs.realpathSync('./'));
+```
+
+```js
+console.log('[realpath] ->', await fs.realpath('./'));
+```
+
+### `renameSync(old, new)` / `rename(old, new)`
+
+```js
+console.log('[renameSync] a.txt -> b.txt');
+fs.renameSync('a.txt', 'b.txt');
+```
+
+```js
+console.log('[rename] a.txt -> b.txt');
+await fs.rename('a.txt', 'b.txt');
+```
+
+### `rmSync(path, { recursive })` / `rm(path, { recursive })`
+
+```js
+console.log('[rmSync] hapus dir');
+fs.rmSync('dir', { recursive: true, force: true });
+```
+
+```js
+console.log('[rm] hapus dist');
+await fs.rm('dist', { recursive: true, force: true });
+```
+
+### `rmdirSync(path)` / `rmdir(path)`
+
+```js
+console.log('[rmdirSync] hapus folder kosong');
+fs.rmdirSync('empty');
+```
+
+```js
+console.log('[rmdir] hapus folder kosong');
+await fs.rmdir('empty');
+```
+
+### `statSync(path)` / `stat(path)`
+
+```js
+console.log('[statSync]', fs.statSync('file.txt'));
+```
+
+```js
+console.log('[stat]', await fs.stat('file.txt'));
+```
+
+### `symlinkSync(target, path)` / `symlink(target, path)`
+
+```js
+console.log('[symlinkSync] buat symlink');
+fs.symlinkSync('src.txt', 'link.txt');
+```
+
+```js
+console.log('[symlink] buat symlink');
+await fs.symlink('src.txt', 'link.txt');
+```
+
+### `truncateSync(path)` / `truncate(path)`
+
+```js
+console.log('[truncateSync] kosongkan file.txt');
+fs.truncateSync('file.txt', 0);
+```
+
+```js
+console.log('[truncate] kosongkan file.txt');
+await fs.truncate('file.txt', 0);
+```
+
+### `unlinkSync(path)` / `unlink(path)`
+
+```js
+console.log('[unlinkSync] hapus temp.txt');
+fs.unlinkSync('temp.txt');
+```
+
+```js
+console.log('[unlink] hapus temp.txt');
+await fs.unlink('temp.txt');
+```
+
+### `utimesSync(path, atime, mtime)` / `utimes(path, atime, mtime)`
+
+```js
+console.log('[utimesSync] update times');
+fs.utimesSync('file.txt', new Date(), new Date());
+```
+
+```js
+console.log('[utimes] update times');
 await fs.utimes('file.txt', new Date(), new Date());
 ```
 
-## `lutimes(path)`
+### `writeFileSync(path, data)` / `writeFile(path, data)`
 
 ```js
-await fs.lutimes('file.txt', new Date(), new Date());
+console.log('[writeFileSync] tulis file a.txt');
+fs.writeFileSync('a.txt', 'Hello');
 ```
 
-## `realpath(path)`
-
 ```js
-console.log(await fs.realpath('./'));
+console.log('[writeFile] tulis file a.txt');
+await fs.writeFile('a.txt', 'Hello');
 ```
 
-## `mkdtemp(prefix)`
+### `createReadStream(path)`
 
 ```js
-console.log(await fs.mkdtemp('tmp-'));
+console.log('[createReadStream] streaming bigfile.txt');
+const stream = fs.createReadStream('bigfile.txt');
+stream.pipe(process.stdout);
 ```
 
-## `writeFile(path, data)`
+### `createWriteStream(path)`
 
 ```js
-await fs.writeFile('a.txt', 'Hello world');
+console.log('[createWriteStream] tulis ke out.txt');
+const out = fs.createWriteStream('out.txt');
+out.write('Hello!');
 ```
 
-## `appendFile(path, data)`
+### `constants`
 
 ```js
-await fs.appendFile('a.txt', '\nAppend');
+console.log('[constants]', fs.constants.O_RDWR);
 ```
 
-## `readFile(path)`
+### `isFileSync(path)` / `isFile(path)`
 
 ```js
-console.log(await fs.readFile('a.txt', 'utf8'));
+console.log('[isFileSync]', fs.isFileSync('image.png'));
 ```
 
-## `watch(path)`
-
 ```js
-for await (const event of fs.watch('./')) {
-    console.log(event);
-}
+console.log('[isFile]', await fs.isFile('image.png'));
 ```
 
-## Streams (createReadStream, createWriteStream)
+### `isDirSync(path)` / `isDir(path)`
 
 ```js
-fs.createReadStream('a.txt').pipe(fs.createWriteStream('b.txt'));
+console.log('[isDirSync]', fs.isDirSync('node_modules'));
 ```
 
-# 2) **HELPER METHODS** (buatan sendiri – modern & simple)
-
-## `exists(path)`
-
 ```js
-if (await fs.exists('config.json')) {
-    console.log('Ada!');
-}
+console.log('[isDir]', await fs.isDir('node_modules'));
 ```
 
-## `isFile(path)`
+### `ensureDirSync(path)` / `ensureDir(path)`
 
 ```js
-console.log(await fs.isFile('a.txt')); // true/false
+console.log('[ensureDirSync] pastikan folder logs/data ada');
+fs.ensureDirSync('logs/data');
 ```
 
-## `isDir(path)`
-
 ```js
-console.log(await fs.isDir('src')); // true/false
+console.log('[ensureDir] pastikan folder logs/data ada');
+await fs.ensureDir('logs/data');
 ```
 
-## `ensureFile(path)`
+### `ensureFileSync(path)` / `ensureFile(path)`
 
 ```js
-await fs.ensureFile('logs/app.log');
+console.log('[ensureFileSync] buat file jika belum ada');
+fs.ensureFileSync('data/config/app.json');
 ```
 
-## `ensureDir(path)`
-
 ```js
-await fs.ensureDir('dist/images/icons');
+console.log('[ensureFile] buat file jika belum ada');
+await fs.ensureFile('data/config/app.json');
 ```
 
-## `ensureEmptyDir(path)`
+### `ensureEmptyDirSync(path)` / `ensureEmptyDir(path)`
 
 ```js
-await fs.ensureEmptyDir('dist');
+console.log('[ensureEmptyDirSync] pastikan kosong');
+fs.ensureEmptyDirSync('cache');
 ```
 
-## `emptyDir(path)`
-
 ```js
-await fs.emptyDir('cache');
+console.log('[ensureEmptyDir] pastikan kosong');
+await fs.ensureEmptyDir('cache');
 ```
 
-## `readJson(path)`
+### `emptyDirSync(path)` / `emptyDir(path)`
 
 ```js
-const obj = await fs.readJson('config.json');
-console.log(obj.name);
+console.log('[emptyDirSync] kosongkan folder tmp');
+fs.emptyDirSync('tmp');
 ```
 
-## `writeJson(path, data)`
-
 ```js
-await fs.writeJson('config.json', {
-    name: 'nodefs-lite',
-});
+console.log('[emptyDir] kosongkan folder tmp');
+await fs.emptyDir('tmp');
 ```
 
-# 3) **FULL COMBINED EXAMPLE**
+### `readJsonSync(path)` / `readJson(path)`
 
 ```js
-import fs from 'nodefs-lite';
+const data = fs.readJsonSync('config.json');
+console.log('[readJsonSync]', data);
+```
 
-await fs.ensureDir('data');
+```js
+const data = await fs.readJson('config.json');
+console.log('[readJson]', data);
+```
 
-await fs.writeJson('data/info.json', {
-    created: Date.now(),
-    app: 'nodefs-lite',
-});
+### `writeJsonSync(path, data)` / `writeJson(path, data)`
 
-const info = await fs.readJson('data/info.json');
+```js
+console.log('[writeJsonSync] tulis config.json');
+fs.writeJsonSync('config.json', { name: 'app', version: '0.0.0' });
+```
 
-console.log('Isi JSON:', info);
-
-await fs.appendFile('data/log.txt', 'Log baru...\n');
-
-console.log('Apakah data/log.txt ada?', await fs.exists('data/log.txt'));
-
-console.log('Isi folder data:', await fs.readdir('data'));
+```js
+console.log('[writeJson] tulis config.json');
+await fs.writeJson('config.json', { name: 'app', version: '0.0.0' });
 ```
