@@ -1,41 +1,41 @@
 {
-    "name": "nodefs-lite",
-    "version": "0.1.8",
-    "description": "Utilitas File System Node.js",
-    "repository": "salmantok/nodefs-lite",
-    "type": "module",
-    "exports": {
-        "import": "./dist/mjs/index.js",
-        "require": "./dist/cjs/index.js"
-    },
-    "files": [
-        "dist/"
-    ],
-    "scripts": {
-        "format": "prettier -w . && impsort && prettier -w .",
-        "build": "besmin lib dist mjs cjs",
-        "dev": "yarn format && yarn build"
-    },
-    "keywords": [
-        "nodefs-lite",
-        "fs",
-        "file",
-        "filesystem",
-        "promises",
-        "write",
-        "read",
-        "copy",
-        "move",
-        "remove",
-        "mkdir",
-        "json",
-        "jsonfile",
-        "lightweight",
-        "utility",
-        "nodejs",
-        "node",
-        "minimal"
-    ],
-    "author": "Salman <salmantok.dev@gmail.com>",
-    "license": "MIT"
+  "name": "nodefs-lite",
+  "version": "0.1.9",
+  "description": "Utilitas File System Node.js",
+  "repository": "salmantok/nodefs-lite",
+  "type": "module",
+  "exports": {
+    "import": "./dist/mjs/index.js",
+    "require": "./dist/cjs/index.js"
+  },
+  "files": [
+    "dist/"
+  ],
+  "scripts": {
+    "format": "prettier -w . && impsort && prettier -w .",
+    "build": "besmin lib dist mjs cjs",
+    "dev": "yarn format && yarn build"
+  },
+  "keywords": [
+    "nodefs-lite",
+    "fs",
+    "file",
+    "filesystem",
+    "promises",
+    "write",
+    "read",
+    "copy",
+    "move",
+    "remove",
+    "mkdir",
+    "json",
+    "jsonfile",
+    "lightweight",
+    "utility",
+    "nodejs",
+    "node",
+    "minimal"
+  ],
+  "author": "Salman <salmantok.dev@gmail.com>",
+  "license": "MIT"
 }
